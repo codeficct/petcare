@@ -1,7 +1,17 @@
 import { Image, View, StyleSheet, Text, Pressable, StatusBar, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import * as NavigationBar from 'expo-navigation-bar'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import * as WebBrowser from 'expo-web-browser'
+import * as Google from 'expo-auth-session/providers/google'
+import { GoogleAuthProvider, onAuthStateChanged, signInWithCredential } from 'firebase/auth'
+import { auth } from '../../../firebaseConfig'
+import { ANDROID_CLIENT_ID, IOS_CLIENT_ID, EXPO_CLIENT_ID } from '@env'
+import { makeRedirectUri } from 'expo-auth-session'
+import { useNavigation } from '@react-navigation/native'
+// import { useAuth } from '../../hooks/useAuth'
+
+WebBrowser.maybeCompleteAuthSession()
 
 const storageLight = async () => {
   try {
@@ -12,14 +22,48 @@ const storageLight = async () => {
   }
 }
 
+const EXPO_REDIRECT_PARAMS = {
+  // useProxy: false,
+  // projectNameForProxy: '@sauterdev/petcare',
+  scheme: 'com.sauter.petcare',
+  path: 'auth.expo.io'
+}
+const NATIVE_REDIRECT_PARAMS = { native: 'petcare://' }
+// const REDIRECT_PARAMS = Constants.appOwnership === 'expo' ? EXPO_REDIRECT_PARAMS : NATIVE_REDIRECT_PARAMS
+const redirectUri = makeRedirectUri(EXPO_REDIRECT_PARAMS)
+
 const Login = () => {
+  const [userInfo, setUserInfo] = useState()
+  const navigation = useNavigation()
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    expoClientId: EXPO_CLIENT_ID,
+    androidClientId: ANDROID_CLIENT_ID,
+    iosClientId: IOS_CLIENT_ID
+    // redirectUri
+  }, { projectNameForProxy: '@sauterdev/petcare' })
+  // const { googleAuth, signInWithGoogle } = useAuth()
   useEffect(() => {
     storageLight()
     return () => {
     }
   }, [])
 
+  useEffect(() => {
+    console.log({ response })
+    if (response?.type === 'success') {
+      const { id_token } = response.params
+      const credential = GoogleAuthProvider.credential(id_token)
+      console.log(response, ' Luis, response')
+      signInWithCredential(auth, credential)
+      // fetchUserInfo(authentication?.accessToken)
+    }
+    return () => {
+
+    }
+  }, [response])
+
   return (
+    // <AuthProvider>
     <SafeAreaView style={[styles.safeArea]}>
       <StatusBar backgroundColor='#2d2a47' barStyle='light-content' />
       <View style={styles.imgContainer}>
@@ -33,7 +77,15 @@ const Login = () => {
             <Text style={styles.subTitle}>¡Inicia sesión y comienza a cuidar a tus mascotas!</Text>
           </View>
           <View style={styles.button}>
-            <Pressable android_ripple={{ color: '#b9f4e2', borderless: true }} style={styles.btn}>
+            <Pressable
+              android_ripple={{ color: '#b9f4e2', borderless: true }}
+              style={styles.btn}
+              onPress={() => {
+                navigation.navigate('Role')
+                // promptAsync(EXPO_REDIRECT_PARAMS)
+                // googleAuth.status === 'unauthenticated' && signInWithGoogle()
+              }}
+            >
               <Image source={require('../../assets/google.png')} style={styles.btnImg} />
               <Text style={styles.btnText}>Iniciar sesión con Google</Text>
             </Pressable>
@@ -45,6 +97,7 @@ const Login = () => {
         </ScrollView>
       </View>
     </SafeAreaView>
+    // </AuthProvider>
   )
 }
 
