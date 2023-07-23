@@ -4,6 +4,7 @@
     "slug": "petcare",
     "version": "1.0.0",
     "orientation": "portrait",
+    "jsEngine": "hermes",
     "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
@@ -25,6 +26,12 @@
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "773ff077-1e2f-42fa-8910-13eb552656c9"
+      }
+    },
+    "scheme": "petcare"
   }
 }
