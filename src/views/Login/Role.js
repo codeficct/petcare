@@ -1,14 +1,16 @@
 import { Pressable, StyleSheet, Text, View, Image, StatusBar } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useNavigation } from '@react-navigation/native'
 
 const Role = ({ email = 'sauterdevs@gmail.com', name = 'Luis Gabriel Janco', photo = 'https://lh3.googleusercontent.com/ogw/AGvuzYagkQQ02FAeCluPAB4SN9aD_NO6QsnPxh2WcxBv=s32-c-mo' }) => {
   const [isUser, setIsUser] = useState(true)
   const handleRole = (value) => setIsUser(value)
+  const navigation = useNavigation()
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar backgroundColor='#f5faf6' barStyle='dark-content' />
-
+      <Text style={{ paddingLeft: 40, marginBottom: 30, fontSize: 30, color: '#2d2a47', fontWeight: '500' }}>Creando cuenta</Text>
       <View style={styles.user}>
         <View style={styles.text}>
           <Text style={styles.name}>{name}</Text>
@@ -17,28 +19,27 @@ const Role = ({ email = 'sauterdevs@gmail.com', name = 'Luis Gabriel Janco', pho
         <Image source={{ uri: photo }} style={styles.photo} />
       </View>
 
-      {/* <View style={styles.title}> */}
-      <Text style={styles.title}>Que tipo de usuario es?</Text>
-      {/* </View> */}
+      {/* <Text style={styles.title}>¿Que tipo de usuario eres?</Text> */}
+      <Text style={styles.title}>Selecciona el tipo de cuenta a crear</Text>
 
-      <View style={styles.cardContainer}>
-        <View style={[styles.card, { borderColor: !isUser ? '#1ec28b' : 'transparent' }]}>
+      <View View style={styles.cardContainer}>
+        <View style={[styles.card, { borderColor: !isUser ? '#8a81ff' : 'transparent' }]}>
           <Pressable
             onPress={() => {
               setIsUser(false)
             }}
-            android_ripple={{ color: '#baf3e2' }} style={{ flex: 1, justifyContent: 'center' }}
+            android_ripple={{ color: '#9391ff' }} style={{ flex: 1, justifyContent: 'center' }}
           >
             <Image source={require('../../assets/vet.png')} style={styles.imgCard} />
             <Text style={styles.role}>Veterinaria</Text>
           </Pressable>
         </View>
-        <View style={[styles.card, { borderColor: isUser ? '#1ec28b' : 'transparent' }]}>
+        <View style={[styles.card, { borderColor: isUser ? '#8a81ff' : 'transparent' }]}>
           <Pressable
             onPress={() => {
               setIsUser(true)
             }}
-            android_ripple={{ color: '#b9f4e2' }} style={{ flex: 1, justifyContent: 'center' }}
+            android_ripple={{ color: '#9391ff' }} style={{ flex: 1, justifyContent: 'center' }}
           >
             <Image source={require('../../assets/user.png')} style={styles.imgCard} />
             <Text style={styles.role}>Usuario</Text>
@@ -48,11 +49,11 @@ const Role = ({ email = 'sauterdevs@gmail.com', name = 'Luis Gabriel Janco', pho
 
       <View style={styles.button}>
         <Pressable
-          android_ripple={{ color: '#b9f4e2', borderless: true }}
+          android_ripple={{ color: '#bfafff', borderless: true }}
           style={styles.btn}
-          onPress={() => { }}
+          onPress={() => navigation.navigate('Home')}
         >
-          <Text style={styles.btnText}>Continuar</Text>
+          <Text style={styles.btnText}>Empezar</Text>
         </Pressable>
       </View>
     </SafeAreaView>
@@ -76,7 +77,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     alignSelf: 'center',
     alignItems: 'center',
-    backgroundColor: '#2d2a47',
+    backgroundColor: '#8a81ff',
     justifyContent: 'center',
     padding: 15,
     marginTop: 20
@@ -95,29 +96,29 @@ const styles = StyleSheet.create({
   },
   title: {
     marginTop: 40,
-    fontSize: 30,
-    color: '#2d2a46',
+    fontSize: 24,
+    paddingHorizontal: 20,
+    color: '#8d93b5',
     textAlign: 'center'
   },
 
   cardContainer: {
-    // flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '100%',
-    padding: 20,
+    paddingHorizontal: 20,
     gap: 20
   },
   imgCard: {
     aspectRatio: 1,
     resizeMode: 'contain',
-    width: 120,
-    height: 120,
+    width: 100,
+    height: 100,
     alignSelf: 'center'
   },
   card: {
     flex: 1,
-    height: 250,
+    height: 220,
     width: '100%',
     borderRadius: 20,
     position: 'relative',
@@ -144,7 +145,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 4,
     marginHorizontal: 4,
-    backgroundColor: '#1ec28b',
+    backgroundColor: '#8a81ff',
     flexShrink: 1
   },
   btn: {
