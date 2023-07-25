@@ -51,6 +51,8 @@ node_modules/
 .expo/
 dist/
 web-build/
+android/
+ios/
 
 # Native
 *.orig.*
@@ -79,5 +81,3 @@ yarn-error.*
 *.tsbuildinfo
 
 # @end expo-cli
-android
-ios
