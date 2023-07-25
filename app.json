@@ -4,7 +4,6 @@
     "slug": "petcare",
     "version": "1.0.0",
     "orientation": "portrait",
-    "jsEngine": "hermes",
     "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
@@ -15,14 +14,14 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.sauter.petcare"
+      "bundleIdentifier": "com.sauterdev.petcare"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.sauter.petcare"
+      "package": "com.sauterdev.petcare"
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
@@ -32,6 +31,16 @@
         "projectId": "773ff077-1e2f-42fa-8910-13eb552656c9"
       }
     },
-    "scheme": "petcare"
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Permita que $(PRODUCT_NAME) acceda a sus fotos",
+          "cameraPermission": "Permita que $(PRODUCT_NAME) acceda a su cámara"
+        }
+      ]
+    ],
+    "scheme": "petcare",
+    "owner": "sauterdev"
   }
 }

@@ -1,5 +1,6 @@
-import { initializeApp } from 'firebase/app'
+import { initializeApp, getApp, getApps } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
+import { getStorage } from 'firebase/storage'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyD-7dzZbGz3DICq6QjMXvVMLwGobMR4eJk',
@@ -10,6 +11,13 @@ const firebaseConfig = {
   appId: '1:614772219166:web:1648e1649f5eee0b777d0f'
 }
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig)
-export const auth = getAuth(app)
+const fbApp = getApp()
+const fbStorage = getStorage()
+const auth = getAuth(app)
+
+const uploadToFirebase = async (uri) => {
+  //
+}
+
+export { auth, fbApp, fbStorage, uploadToFirebase }

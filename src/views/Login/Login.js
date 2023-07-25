@@ -1,71 +1,54 @@
-import { Image, View, StyleSheet, Text, Pressable, StatusBar, ScrollView } from 'react-native'
+import { Image, View, StyleSheet, Text, Pressable, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import * as NavigationBar from 'expo-navigation-bar'
 import { useEffect, useState } from 'react'
 import * as WebBrowser from 'expo-web-browser'
 import * as Google from 'expo-auth-session/providers/google'
-import { GoogleAuthProvider, onAuthStateChanged, signInWithCredential } from 'firebase/auth'
+import {
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithCredential
+} from 'firebase/auth'
 import { auth } from '../../../firebaseConfig'
-import { ANDROID_CLIENT_ID, IOS_CLIENT_ID, EXPO_CLIENT_ID } from '@env'
-import { makeRedirectUri } from 'expo-auth-session'
+// import { ANDROID_CLIENT_ID, IOS_CLIENT_ID, EXPO_CLIENT_ID } from '@env'
 import { useNavigation } from '@react-navigation/native'
 // import { useAuth } from '../../hooks/useAuth'
 
 WebBrowser.maybeCompleteAuthSession()
 
-const storageLight = async () => {
-  try {
-    NavigationBar.setBackgroundColorAsync('#F5FDFF')
-    NavigationBar.setButtonStyleAsync('dark')
-  } catch (e) {
-    console.error(e)
-  }
-}
-
-const EXPO_REDIRECT_PARAMS = {
-  // useProxy: false,
-  // projectNameForProxy: '@sauterdev/petcare',
-  scheme: 'com.sauter.petcare',
-  path: 'auth.expo.io'
-}
-const NATIVE_REDIRECT_PARAMS = { native: 'petcare://' }
+// const EXPO_REDIRECT_PARAMS = {
+//   // useProxy: false,
+//   // projectNameForProxy: '@sauterdev/petcare',
+//   scheme: 'com.sauter.petcare',
+//   path: 'auth.expo.io'
+// }
+// const NATIVE_REDIRECT_PARAMS = { native: 'petcare://' }
 // const REDIRECT_PARAMS = Constants.appOwnership === 'expo' ? EXPO_REDIRECT_PARAMS : NATIVE_REDIRECT_PARAMS
-const redirectUri = makeRedirectUri(EXPO_REDIRECT_PARAMS)
+// const redirectUri = makeRedirectUri(EXPO_REDIRECT_PARAMS)
 
 const Login = () => {
   const [userInfo, setUserInfo] = useState()
   const navigation = useNavigation()
   const [request, response, promptAsync] = Google.useAuthRequest({
-    expoClientId: EXPO_CLIENT_ID,
-    androidClientId: ANDROID_CLIENT_ID,
-    iosClientId: IOS_CLIENT_ID
-    // redirectUri
-  }, { projectNameForProxy: '@sauterdev/petcare' })
+    iosClientId: '431557771772-qgcga65fa38ikl8kae76avdj6psortbf.apps.googleusercontent.com',
+    androidClientId: '431557771772-l022srdt8nvkcumg1udel00odg1a3vkp.apps.googleusercontent.com',
+    expoClientId: '431557771772-9bf62nj3c6id0ohvet8kfst1bpplv2v8.apps.googleusercontent.com'
+  }, {
+    projectNameForProxy: '@sauterdev/petcare'
+  })
   // const { googleAuth, signInWithGoogle } = useAuth()
-  useEffect(() => {
-    storageLight()
-    return () => {
-    }
-  }, [])
 
   useEffect(() => {
-    console.log({ response })
     if (response?.type === 'success') {
       const { id_token } = response.params
       const credential = GoogleAuthProvider.credential(id_token)
-      console.log(response, ' Luis, response')
       signInWithCredential(auth, credential)
-      // fetchUserInfo(authentication?.accessToken)
-    }
-    return () => {
-
     }
   }, [response])
 
   return (
     // <AuthProvider>
     <SafeAreaView style={[styles.safeArea]}>
-      <StatusBar backgroundColor='#2d2a47' barStyle='light-content' />
+      {/* <StatusBar backgroundColor='#2d2a47' barStyle='light-content' /> */}
       <View style={styles.imgContainer}>
         <Image source={require('../../assets/logo3.png')} style={styles.img} />
       </View>
@@ -81,8 +64,8 @@ const Login = () => {
               android_ripple={{ color: '#b9f4e2', borderless: true }}
               style={styles.btn}
               onPress={() => {
-                navigation.navigate('Role')
-                // promptAsync(EXPO_REDIRECT_PARAMS)
+                // navigation.navigate('Role')
+                promptAsync({ projectNameForProxy: '@sauterdev/petcare', proxyOptions: { scheme: 'petcare' } })
                 // googleAuth.status === 'unauthenticated' && signInWithGoogle()
               }}
             >
@@ -108,7 +91,8 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
     justifyContent: 'space-between',
-    backgroundColor: '#2d2a47'
+    backgroundColor: '#2d2a47',
+    paddingVertical: 0
   },
   imgContainer: {
     flex: 1,
@@ -127,10 +111,11 @@ const styles = StyleSheet.create({
     padding: 30,
     flex: 1,
     justifyContent: 'space-between',
-    backgroundColor: '#fff',
+    backgroundColor: '#fefefb',
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
-    gap: 20
+    gap: 20,
+    marginBottom: -20
   },
   title1: {
     fontSize: 30,
