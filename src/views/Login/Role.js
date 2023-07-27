@@ -1,20 +1,48 @@
 import { Pressable, StyleSheet, Text, View, Image, StatusBar } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
+import { useAuth } from '../../hooks/useAuth'
+import { authGoogle } from '../../../services/user'
 
-const Role = ({ email = 'sauterdevs@gmail.com', name = 'Luis Gabriel Janco', photo = 'https://lh3.googleusercontent.com/ogw/AGvuzYagkQQ02FAeCluPAB4SN9aD_NO6QsnPxh2WcxBv=s32-c-mo' }) => {
+const Role = () => {
   const [isUser, setIsUser] = useState(true)
-  const handleRole = (value) => setIsUser(value)
+  const { googleAuth, handleGoogleAuthentication } = useAuth()
+  const { email, name, photo, token } = googleAuth
   const navigation = useNavigation()
+
+  const handleLogin = () => {
+    authGoogle({
+      email,
+      name,
+      photo,
+      role: isUser ? 'user' : 'vet'
+    })
+      .then(({ data }) => {
+        handleGoogleAuthentication({
+          email: data.email,
+          name: data.name,
+          photo: data.photo,
+          token,
+          status: 'authenticated',
+          role: data.role,
+          signIn: true
+        })
+      }
+      ).catch(err => console.log(err))
+      .finally(() => {
+        // navigation.navigate('Home')
+      })
+  }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar backgroundColor='#f5faf6' barStyle='dark-content' />
       <Text style={{ paddingLeft: 40, marginBottom: 30, fontSize: 30, color: '#2d2a47', fontWeight: '500' }}>Creando cuenta</Text>
       <View style={styles.user}>
         <View style={styles.text}>
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.name}>{email}</Text>
+          <Text style={[styles.name, { fontWeight: '700' }]}>{name}</Text>
+          <Text style={[styles.name, { color: '#ebe4ff' }]}>{email}</Text>
         </View>
         <Image source={{ uri: photo }} style={styles.photo} />
       </View>
@@ -51,7 +79,7 @@ const Role = ({ email = 'sauterdevs@gmail.com', name = 'Luis Gabriel Janco', pho
         <Pressable
           android_ripple={{ color: '#bfafff', borderless: true }}
           style={styles.btn}
-          onPress={() => navigation.navigate('Home')}
+          onPress={() => handleLogin()}
         >
           <Text style={styles.btnText}>Empezar</Text>
         </Pressable>
@@ -73,13 +101,14 @@ const styles = StyleSheet.create({
   user: {
     flexDirection: 'row',
     gap: 20,
-    width: '80%',
+    // width: '80%',
     borderRadius: 30,
     alignSelf: 'center',
     alignItems: 'center',
     backgroundColor: '#8a81ff',
     justifyContent: 'center',
-    padding: 15,
+    paddingVertical: 15,
+    paddingHorizontal: 24,
     marginTop: 20
   },
   text: {

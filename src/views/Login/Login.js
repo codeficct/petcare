@@ -1,19 +1,12 @@
 import { Image, View, StyleSheet, Text, Pressable, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useEffect, useState } from 'react'
-import * as WebBrowser from 'expo-web-browser'
-import * as Google from 'expo-auth-session/providers/google'
-import {
-  GoogleAuthProvider,
-  onAuthStateChanged,
-  signInWithCredential
-} from 'firebase/auth'
-import { auth } from '../../../firebaseConfig'
+
 // import { ANDROID_CLIENT_ID, IOS_CLIENT_ID, EXPO_CLIENT_ID } from '@env'
 import { useNavigation } from '@react-navigation/native'
+import { useAuth } from '../../hooks/useAuth'
+import { auth } from '../../auth/google'
 // import { useAuth } from '../../hooks/useAuth'
-
-WebBrowser.maybeCompleteAuthSession()
 
 // const EXPO_REDIRECT_PARAMS = {
 //   // useProxy: false,
@@ -28,22 +21,28 @@ WebBrowser.maybeCompleteAuthSession()
 const Login = () => {
   const [userInfo, setUserInfo] = useState()
   const navigation = useNavigation()
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    iosClientId: '431557771772-qgcga65fa38ikl8kae76avdj6psortbf.apps.googleusercontent.com',
-    androidClientId: '431557771772-l022srdt8nvkcumg1udel00odg1a3vkp.apps.googleusercontent.com',
-    expoClientId: '431557771772-9bf62nj3c6id0ohvet8kfst1bpplv2v8.apps.googleusercontent.com'
-  }, {
-    projectNameForProxy: '@sauterdev/petcare'
-  })
-  // const { googleAuth, signInWithGoogle } = useAuth()
+  const { googleAuth, handleGoogleAuthentication } = useAuth()
+  const { promptAsync, message } = auth()
+
+  const handleLogin = async () => {
+    await promptAsync({
+      projectNameForProxy: '@sauterdev/petcare',
+      proxyOptions: {
+        // scheme: 'com.sauterdev.petcare'
+        scheme: 'petcare'
+      }
+    })
+    // navigation.navigate('Role')
+  }
 
   useEffect(() => {
-    if (response?.type === 'success') {
-      const { id_token } = response.params
-      const credential = GoogleAuthProvider.credential(id_token)
-      signInWithCredential(auth, credential)
+    if (message === 'sig up') {
+      navigation.navigate('Role')
     }
-  }, [response])
+
+    return () => {
+    }
+  }, [message])
 
   return (
     // <AuthProvider>
@@ -63,11 +62,7 @@ const Login = () => {
             <Pressable
               android_ripple={{ color: '#b9f4e2', borderless: true }}
               style={styles.btn}
-              onPress={() => {
-                // navigation.navigate('Role')
-                promptAsync({ projectNameForProxy: '@sauterdev/petcare', proxyOptions: { scheme: 'petcare' } })
-                // googleAuth.status === 'unauthenticated' && signInWithGoogle()
-              }}
+              onPress={() => handleLogin()}
             >
               <Image source={require('../../assets/google.png')} style={styles.btnImg} />
               <Text style={styles.btnText}>Iniciar sesión con Google</Text>

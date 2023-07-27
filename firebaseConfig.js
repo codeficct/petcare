@@ -11,7 +11,14 @@ const firebaseConfig = {
   appId: '1:614772219166:web:1648e1649f5eee0b777d0f'
 }
 
-const app = initializeApp(firebaseConfig)
+let app
+if (!getApps().length) {
+  app = initializeApp(firebaseConfig)
+} else {
+  app = getApp()
+}
+
+// const app = initializeApp(firebaseConfig)
 const fbApp = getApp()
 const fbStorage = getStorage()
 const auth = getAuth(app)

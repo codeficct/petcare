@@ -28,7 +28,7 @@ const AddPet = () => {
 
   const takePhoto = async () => {
     try {
-      const cameraResp = await ImagePicker.launchImageLibraryAsync({
+      const cameraResp = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         quality: 1

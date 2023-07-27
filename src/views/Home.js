@@ -4,14 +4,16 @@ import Nav from '../components/Nav'
 import HealthCheckup from '../components/HealthCheckup'
 import Pets from '../components/Pets'
 import Footer from '../components/Footer'
+import { useAuth } from '../hooks/useAuth'
 
 const Home = () => {
+  const { googleAuth } = useAuth()
   return (
     <SafeAreaView style={styles.safeArea}>
       <View>
         <ScrollView>
           <View style={styles.header}>
-            <Text style={styles.title}>Hola <Text style={{ fontWeight: '700' }}>Luis Gabriel</Text>,</Text>
+            <Text style={styles.title}>Hola <Text style={{ fontWeight: '700' }}>{googleAuth.name}</Text>,</Text>
             <Text style={styles.subTitle}>¡Cuidemos a tus lindas mascotas!</Text>
           </View>
           <Nav />
