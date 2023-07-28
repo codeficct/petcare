@@ -1,24 +1,35 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import Nav from '../components/Nav'
 import HealthCheckup from '../components/HealthCheckup'
 import Pets from '../components/Pets'
 import Footer from '../components/Footer'
 import { useAuth } from '../hooks/useAuth'
+import { useCallback, useState } from 'react'
 
 const Home = () => {
   const { googleAuth } = useAuth()
+  const [refreshing, setRefreshing] = useState(false)
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true)
+    setTimeout(() => {
+      setRefreshing(false)
+    }, 1000)
+  }, [])
   return (
     <SafeAreaView style={styles.safeArea}>
       <View>
-        <ScrollView>
+        <ScrollView refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        >
           <View style={styles.header}>
             <Text style={styles.title}>Hola <Text style={{ fontWeight: '700' }}>{googleAuth.name}</Text>,</Text>
             <Text style={styles.subTitle}>¡Cuidemos a tus lindas mascotas!</Text>
           </View>
-          <Nav />
+          {/* <Nav /> */}
           <HealthCheckup />
-          <Pets />
+          <Pets isLoading={refreshing} />
           <Footer />
         </ScrollView>
       </View>
