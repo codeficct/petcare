@@ -7,6 +7,8 @@ LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state'
 ])
 
+LogBox.ignoreAllLogs()
+
 const App = () => {
   return (
     <SafeAreaProvider>
