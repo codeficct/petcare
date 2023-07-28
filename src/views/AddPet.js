@@ -1,67 +1,95 @@
 import { Alert, Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { Picker } from '@react-native-picker/picker'
-import * as ImagePicker from 'expo-image-picker'
-import ModalPermission from './modal/ModalPermission'
+// import * as ImagePicker from 'expo-image-picker'
 import { useNavigation } from '@react-navigation/native'
-import { uploadToFirebase } from '../../firebaseConfig'
+// import { uploadToFirebase } from '../../firebaseConfig'
+import { createPet } from '../../services/pet'
+import { useAuth } from '../hooks/useAuth'
 
 const AddPet = () => {
-  const [permission, requestPermission] = ImagePicker.useCameraPermissions()
+  // const [permission, requestPermission] = ImagePicker.useCameraPermissions()
+  const { googleAuth, photoPet } = useAuth()
   const navigation = useNavigation()
   const [pet, setPet] = useState({
     name: '',
-    photo: '',
+    photo: photoPet,
     pet: 'dog',
     birthdate: '',
     race: '',
-    owner: '',
+    owner: googleAuth.id,
     gender: 'male'
   })
   const [date, setDate] = useState({ day: '', month: '', year: '' })
 
   const handleSubmit = () => {
-    setPet(prev => ({ ...prev, birthdate: `${date.day}/${date.month}/${date.year}` }))
-    console.log(pet)
-  }
-
-  const takePhoto = async () => {
-    try {
-      const cameraResp = await ImagePicker.launchCameraAsync({
-        allowsEditing: true,
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        quality: 1
+    console.log(date)
+    const bithDate = `${date.day}/${date.month}/${date.year}`
+    const { name, race } = pet
+    if (bithDate === '' ||
+      name === '' || race === '') {
+      return Alert.alert('Todos los campos son obligatorios')
+    }
+    createPet({ ...pet, birthdate: bithDate })
+      .then(res => {
+        if (res.message === 'Pet created') {
+          navigation.navigate('Home')
+        } else {
+          Alert.alert('La mascota ya existe')
+        }
       })
-      if (!cameraResp.canceled) {
-        // setPet(prev => ({ ...prev, photo: cameraResp.uri }))
-        const { uri } = cameraResp.assets[0]
-        console.log(cameraResp.assets[0])
-        setPet(prev => ({ ...prev, photo: uri }))
-        await uploadToFirebase(uri)
-      }
-    } catch (error) {
-      Alert.alert('Error Uploading Image ' + error.message)
-    }
   }
 
-  const OpenCamera = () => {
-    try {
-      if (permission?.status !== ImagePicker.PermissionStatus.GRANTED) {
-        return (
-          navigation.navigate('ModalPermission', { status: permission?.status, requestPermission })
-        )
-      }
-      takePhoto()
-    } catch (error) {
-    }
+  const handlePhotoPets = () => {
+    navigation.navigate('ModalPets')
   }
+
+  // const takePhoto = async () => {
+  //   try {
+  //     const cameraResp = await ImagePicker.launchCameraAsync({
+  //       allowsEditing: true,
+  //       mediaTypes: ImagePicker.MediaTypeOptions.All,
+  //       quality: 1
+  //     })
+  //     if (!cameraResp.canceled) {
+  //       // setPet(prev => ({ ...prev, photo: cameraResp.uri }))
+  //       const { uri } = cameraResp.assets[0]
+  //       console.log(cameraResp.assets[0])
+  //       setPet(prev => ({ ...prev, photo: uri }))
+  //       await uploadToFirebase(uri)
+  //     }
+  //   } catch (error) {
+  //     Alert.alert('Error Uploading Image ' + error.message)
+  //   }
+  // }
+
+  // const OpenCamera = () => {
+  //   try {
+  //     if (permission?.status !== ImagePicker.PermissionStatus.GRANTED) {
+  //       return (
+  //         navigation.navigate('ModalPermission', { status: permission?.status, requestPermission })
+  //       )
+  //     }
+  //     takePhoto()
+  //   } catch (error) {
+  //   }
+  // }
+
+  useEffect(() => {
+    if (photoPet !== '') {
+      setPet(prev => ({ ...prev, photo: photoPet }))
+    }
+    return () => {
+
+    }
+  }, [photoPet])
 
   return (
     <KeyboardAvoidingView enabled style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View style={styles.form}>
         <ScrollView contentContainerStyle={{ gap: 15, paddingHorizontal: 20 }}>
-          <TouchableOpacity activeOpacity={0.7} onPress={OpenCamera}>
+          <TouchableOpacity activeOpacity={0.7} onPress={handlePhotoPets}>
             <View style={styles.addPhoto}>
               {pet.photo !== ''
                 ? <Image style={styles.img} source={{ uri: pet.photo }} />
@@ -137,7 +165,7 @@ const AddPet = () => {
           >
             <Picker.Item label='Perro' value='dog' />
             <Picker.Item label='Gato' value='cat' />
-            <Picker.Item label='Pájaro' value='bird' />
+            <Picker.Item label='Avé' value='bird' />
             <Picker.Item label='Hamster' value='hamster' />
           </Picker>
           <Text style={styles.label}>Genero</Text>
