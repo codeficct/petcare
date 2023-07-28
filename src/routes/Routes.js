@@ -8,6 +8,10 @@ import Home from '../views/Home'
 import AddPet from '../views/AddPet'
 import ModalPermission from '../views/modal/ModalPermission'
 import { useAuth } from '../hooks/useAuth'
+import ModalPets from '../views/modal/ModalPets'
+import Pet from '../views/Pet'
+import Vaccines from '../views/Vaccines'
+import AddVaccine from '../views/AddVaccine'
 
 const Stack = createNativeStackNavigator()
 
@@ -85,6 +89,15 @@ const LoginRendering = (googleAuth) => {
       />
       <Stack.Screen
         options={{
+          headerTitle: '',
+          animation: 'fade_from_bottom',
+          presentation: 'modal',
+          navigationBarColor: '#f7f9fc',
+          statusBarColor: '#f7f9fc',
+          headerStyle: { backgroundColor: '#f7f9fc' },
+          headerShadowVisible: false,
+          headerTitleAlign: 'center',
+          contentStyle: { backgroundColor: '#f7f9fc' },
           statusBarStyle: 'dark'
         }} name='ModalUser' component={ModalUser}
       />
@@ -103,13 +116,73 @@ const LoginRendering = (googleAuth) => {
         name='ModalPermission'
         component={ModalPermission}
       />
+      <Stack.Screen
+        name='ModalPets'
+        component={ModalPets}
+        options={{
+          title: 'Selecciona tu mascota',
+          animation: 'fade_from_bottom',
+          presentation: 'modal',
+          navigationBarColor: '#f7f9fc',
+          statusBarColor: '#f7f9fc',
+          headerStyle: { backgroundColor: '#f7f9fc' },
+          headerShadowVisible: false,
+          headerTitleAlign: 'center',
+          contentStyle: { backgroundColor: '#f7f9fc' },
+          statusBarStyle: 'dark'
+        }}
+      />
+      <Stack.Screen
+        component={Pet}
+        name='Pet'
+        options={{
+          headerTitle: '',
+          animation: 'fade_from_bottom',
+          navigationBarColor: '#f7f9fc',
+          statusBarColor: '#f7f9fc',
+          headerStyle: { backgroundColor: '#f7f9fc' },
+          headerShadowVisible: false,
+          headerTitleAlign: 'center',
+          contentStyle: { backgroundColor: '#f7f9fc' },
+          statusBarStyle: 'dark'
+        }}
+      />
+      <Stack.Screen
+        component={Vaccines}
+        name='Vaccines'
+        options={{
+          headerTitle: 'Historial de vacunas',
+          animation: 'fade_from_bottom',
+          navigationBarColor: '#f7f9fc',
+          statusBarColor: '#f7f9fc',
+          headerStyle: { backgroundColor: '#f7f9fc' },
+          headerShadowVisible: false,
+          headerTitleAlign: 'center',
+          contentStyle: { backgroundColor: '#f7f9fc' },
+          statusBarStyle: 'dark'
+        }}
+      />
+      <Stack.Screen
+        component={AddVaccine}
+        name='AddVaccine'
+        options={{
+          headerTitle: 'Crear Vacuna',
+          animation: 'fade_from_bottom',
+          navigationBarColor: '#f7f9fc',
+          statusBarColor: '#f7f9fc',
+          headerStyle: { backgroundColor: '#f7f9fc' },
+          headerShadowVisible: false,
+          headerTitleAlign: 'center',
+          contentStyle: { backgroundColor: '#f7f9fc' },
+          statusBarStyle: 'dark'
+        }}
+      />
     </>
   )
 }
 
 const Routes = () => {
   const { googleAuth } = useAuth()
-  console.log(googleAuth)
   return (
     <NavigationContainer>
       <Stack.Navigator>
