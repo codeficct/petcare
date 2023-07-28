@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { INITIAL_STATE } from '../context/authContext'
 import { storageAuth } from '../config/constants'
-import { authGoogle, getUserByEmail } from '../../services/user'
+import { getUserByEmail } from '../../services/user'
 import { useNavigation } from '@react-navigation/native'
 
 WebBrowser.maybeCompleteAuthSession()
@@ -20,13 +20,12 @@ export const auth = () => {
   }, {
     projectNameForProxy: '@sauterdev/petcare',
     scheme: 'petcare'
-    // scheme: 'com.sauterdev.petcare'
   })
 
   const navigation = useNavigation()
 
   const { handleGoogleAuthentication, googleAuth } = useAuth()
-  const { token, email, name, photo, status } = googleAuth
+  const { token, email } = googleAuth
   const [message, setMessage] = useState('')
 
   const fetchUserInfo = async (token) => {
@@ -40,7 +39,8 @@ export const auth = () => {
           token,
           status: 'authenticated',
           role: '',
-          signIn: false
+          signIn: false,
+          id: ''
         })
       }
     }
@@ -59,9 +59,7 @@ export const auth = () => {
       if (token !== '') {
         getUserByEmail(email)
           .then(res => {
-            console.log(res)
             if (!res || !res._id) {
-              // navigation.navigate('Role')
               setMessage('sig up')
             } else {
               handleGoogleAuthentication({
@@ -71,7 +69,8 @@ export const auth = () => {
                 token,
                 status: 'authenticated',
                 role: res.role,
-                signIn: true
+                signIn: true,
+                id: res._id
               })
               setMessage('sig in')
             }

@@ -3,6 +3,6 @@ import { useContext } from 'react'
 import { AuthContext } from '../context/authContext'
 
 export const useAuth = () => {
-  const { googleAuth, handleGoogleAuthentication } = useContext(AuthContext)
-  return { googleAuth, handleGoogleAuthentication }
+  const { googleAuth, handleGoogleAuthentication, handlePhotoPet, photoPet } = useContext(AuthContext)
+  return { googleAuth, handleGoogleAuthentication, handlePhotoPet, photoPet }
 }
