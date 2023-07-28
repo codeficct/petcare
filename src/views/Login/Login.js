@@ -1,38 +1,20 @@
 import { Image, View, StyleSheet, Text, Pressable, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useEffect, useState } from 'react'
-
-// import { ANDROID_CLIENT_ID, IOS_CLIENT_ID, EXPO_CLIENT_ID } from '@env'
+import { useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { useAuth } from '../../hooks/useAuth'
 import { auth } from '../../auth/google'
-// import { useAuth } from '../../hooks/useAuth'
-
-// const EXPO_REDIRECT_PARAMS = {
-//   // useProxy: false,
-//   // projectNameForProxy: '@sauterdev/petcare',
-//   scheme: 'com.sauter.petcare',
-//   path: 'auth.expo.io'
-// }
-// const NATIVE_REDIRECT_PARAMS = { native: 'petcare://' }
-// const REDIRECT_PARAMS = Constants.appOwnership === 'expo' ? EXPO_REDIRECT_PARAMS : NATIVE_REDIRECT_PARAMS
-// const redirectUri = makeRedirectUri(EXPO_REDIRECT_PARAMS)
 
 const Login = () => {
-  const [userInfo, setUserInfo] = useState()
   const navigation = useNavigation()
-  const { googleAuth, handleGoogleAuthentication } = useAuth()
   const { promptAsync, message } = auth()
 
   const handleLogin = async () => {
     await promptAsync({
       projectNameForProxy: '@sauterdev/petcare',
       proxyOptions: {
-        // scheme: 'com.sauterdev.petcare'
         scheme: 'petcare'
       }
     })
-    // navigation.navigate('Role')
   }
 
   useEffect(() => {

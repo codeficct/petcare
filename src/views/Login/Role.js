@@ -26,7 +26,8 @@ const Role = () => {
           token,
           status: 'authenticated',
           role: data.role,
-          signIn: true
+          signIn: true,
+          id: data._id
         })
       }
       ).catch(err => console.log(err))
