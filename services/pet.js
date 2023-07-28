@@ -25,3 +25,13 @@ export const createPet = async (objData) => {
     console.log(error.message)
   }
 }
+
+export const getPetById = async (id) => {
+  try {
+    const pet = await fetch(`${dbApiUri}/api/pet/${id}`)
+    const data = await pet.json()
+    return data
+  } catch (error) {
+    console.log(error.message)
+  }
+}
