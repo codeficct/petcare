@@ -32,7 +32,8 @@ export default HealthCheckup
 
 const styles = StyleSheet.create({
   contain: {
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
+    paddingVertical: 40
   },
   cardContainer: {
     overflow: 'hidden',
